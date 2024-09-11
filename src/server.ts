@@ -35,8 +35,8 @@ server.addService(GuestServiceService, {
     const roomNumber = await generateRoomNumber();
 
     const { error } = await supabase.from("guests").insert({
-      first_name: firstName,
-      last_name: lastName,
+      first_name: firstName.toLowerCase(),
+      last_name: lastName.toLowerCase(),
       room_number: roomNumber,
     });
 
@@ -58,7 +58,7 @@ server.addService(GuestServiceService, {
     const { data, error } = await supabase
       .from("guests")
       .select("*")
-      .eq("last_name", lastName)
+      .eq("last_name", lastName.toLowerCase())
       .eq("room_number", roomNumber)
       .single();
 
@@ -99,7 +99,7 @@ server.addService(GuestServiceService, {
     const { lastName, roomNumber } = call.request;
 
     const { error } = await supabase.rpc("increment_wifi_login_count", {
-      last_name_input: lastName,
+      last_name_input: lastName.toLowerCase(),
       room_number_input: roomNumber,
     });
 
