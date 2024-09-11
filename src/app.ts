@@ -31,6 +31,7 @@ server.addService(GuestServiceService, {
     call: { request: CheckInGuestRequest },
     callback: Callback<CheckInGuestResponse>
   ) {
+    console.log("Check-in request received");
     const { firstName, lastName } = call.request;
     const roomNumber = await generateRoomNumber();
 
@@ -41,12 +42,14 @@ server.addService(GuestServiceService, {
     });
 
     if (error) {
+      console.error("Error in check-in process:", error);
       callback(generateServiceError(error), null);
       return;
     }
 
     const response: CheckInGuestResponse = { roomNumber };
     callback(null, response);
+    console.log("Check-in response sent");
   },
 
   async getGuestByLastNameAndRoom(
@@ -54,6 +57,7 @@ server.addService(GuestServiceService, {
     callback: Callback<Guest>
   ) {
     const { lastName, roomNumber } = call.request;
+    console.log("Get guest request received");
 
     const { data, error } = await supabase
       .from("guests")
@@ -63,11 +67,13 @@ server.addService(GuestServiceService, {
       .single();
 
     if (error) {
+      console.error("Error in get guest process:", error);
       callback(generateServiceError(error), null);
       return;
     }
 
     if (!data) {
+      console.error("No user found");
       callback(
         {
           name: "NoUserError",
@@ -90,12 +96,14 @@ server.addService(GuestServiceService, {
     };
 
     callback(null, guest);
+    console.log("Get guest response sent");
   },
 
   async incrementWifiLoginCount(
     call: { request: IncrementWifiLoginCountRequest },
     callback: Callback<IncrementWifiLoginCountResponse>
   ) {
+    console.log("Increment WiFi login count request received");
     const { lastName, roomNumber } = call.request;
 
     const { error } = await supabase.rpc("increment_wifi_login_count", {
@@ -104,12 +112,14 @@ server.addService(GuestServiceService, {
     });
 
     if (error) {
+      console.error("Error in increment WiFi login count process:", error);
       callback(generateServiceError(error), null);
       return;
     }
 
     const response: IncrementWifiLoginCountResponse = { success: true };
     callback(null, response);
+    console.log("Increment WiFi login count response sent");
   },
 });
 
