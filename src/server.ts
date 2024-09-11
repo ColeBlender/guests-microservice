@@ -114,14 +114,21 @@ server.addService(GuestServiceService, {
 });
 
 async function subscribeToGuestEvents() {
-  const nc = await connect({ servers: "nats://localhost:4222" });
+  const nc = await connect({
+    servers:
+      process.env.NODE_ENV === "development"
+        ? "nats://localhost:4222"
+        : process.env.NATS_URL,
+  });
   console.log("Connected to NATS");
 
   const sub = nc.subscribe("guest.update");
   console.log('Subscribed to "guest.update" events');
 
   const client = new GuestServiceClient(
-    `localhost:${port}`,
+    process.env.NODE_ENV === "development"
+      ? "localhost:50051"
+      : process.env.GRPC_GUESTS_URL!,
     credentials.createInsecure()
   );
 
@@ -150,9 +157,8 @@ async function subscribeToGuestEvents() {
   return nc;
 }
 
-const port = process.env.PORT || 50051;
 server.bindAsync(
-  `0.0.0.0:${port}`,
+  "0.0.0.0:50051",
   ServerCredentials.createInsecure(),
   (err, port) => {
     if (err) {
