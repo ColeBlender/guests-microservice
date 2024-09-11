@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development ts-node-dev --respawn src/server.ts",
+    "dev": "NODE_ENV=development ts-node-dev --respawn src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js",
     "generate-proto": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./src/generated --ts_proto_opt=outputServices=grpc-js,env=node,esModuleInterop=true -I ./src/proto guest.proto"
   },
   "keywords": [],
