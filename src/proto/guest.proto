@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package guest;
+
+service GuestService {
+  rpc CheckInGuest (CheckInGuestRequest) returns (CheckInGuestResponse) {}
+  
+  rpc GetGuestByLastNameAndRoom (GetGuestRequest) returns (Guest) {}
+  
+  rpc IncrementWifiLoginCount (IncrementWifiLoginCountRequest) returns (IncrementWifiLoginCountResponse) {}
+}
+
+message CheckInGuestRequest {
+  string first_name = 1;
+  string last_name = 2;
+}
+
+message CheckInGuestResponse {
+  int32 room_number = 1;
+}
+
+message GetGuestRequest {
+  string last_name = 1;
+  int32 room_number = 2;
+}
+
+message IncrementWifiLoginCountRequest {
+  string last_name = 1;
+  int32 room_number = 2;
+}
+
+message IncrementWifiLoginCountResponse {
+  bool success = 1;
+}
+
+message Guest {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  int32 room_number = 4;
+  int32 wifi_login_count = 5;
+}
